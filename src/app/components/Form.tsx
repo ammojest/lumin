@@ -68,8 +68,6 @@ export const Form = () => {
     };
   }, []);
 
-  // Remove automatic localStorage saving - only save when explicitly adding tasks
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -79,7 +77,6 @@ export const Form = () => {
       if (savedTasks) {
         currentTasks = JSON.parse(savedTasks);
       } else {
-        // If no saved tasks, use current component state (which includes initial tasks)
         currentTasks = tasks;
       }
     } catch (error) {
