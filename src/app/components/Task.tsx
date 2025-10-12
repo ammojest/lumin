@@ -7,7 +7,6 @@ import {
   Typography,
   Chip,
   Box,
-  Divider,
 } from "@mui/material";
 import React from "react";
 

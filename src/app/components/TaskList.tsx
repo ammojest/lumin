@@ -13,7 +13,6 @@ import {
   ListItem,
   ListItemText,
   Paper,
-  Divider,
   Stack,
 } from "@mui/material";
 import { Form } from "./Form";
@@ -37,12 +36,10 @@ export const TaskList = () => {
       if (savedTasks) {
         setTasks(JSON.parse(savedTasks));
       } else {
-        // Only set initial tasks if no saved tasks exist
         setTasks(initialTasks as TaskType[]);
       }
     } catch (error) {
       console.error("Error loading tasks from localStorage:", error);
-      // Fallback to initial tasks on error
       setTasks(initialTasks as TaskType[]);
     }
 
@@ -99,7 +96,6 @@ export const TaskList = () => {
     }
   };
 
-  // Show loading state during hydration to prevent mismatch
   if (!isHydrated) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
@@ -159,7 +155,6 @@ export const TaskList = () => {
           </Stack>
         </Paper>
 
-        {/* Ready to Start Section */}
         <Paper elevation={2} sx={{ p: 3 }}>
           <Typography variant="h5" component="h2" gutterBottom sx={{ mb: 2 }}>
             Ready to Start
@@ -202,7 +197,6 @@ export const TaskList = () => {
           </List>
         </Paper>
 
-        {/* Add New Task Section */}
         <Paper elevation={2} sx={{ p: 3 }}>
           <Typography variant="h5" component="h2" gutterBottom sx={{ mb: 3 }}>
             Add New Task
@@ -210,7 +204,6 @@ export const TaskList = () => {
           <Form />
         </Paper>
 
-        {/* Actions */}
         <Box display="flex" justifyContent="center">
           <Button
             variant="contained"
