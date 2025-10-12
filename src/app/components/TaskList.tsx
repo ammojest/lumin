@@ -123,7 +123,6 @@ export const TaskList = () => {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       <Stack spacing={4}>
-        {/* Header */}
         <Box>
           <Typography
             variant="h4"
@@ -135,7 +134,6 @@ export const TaskList = () => {
           </Typography>
         </Box>
 
-        {/* Task List Section */}
         <Paper elevation={2} sx={{ p: 3 }}>
           <Typography variant="h5" component="h2" gutterBottom sx={{ mb: 3 }}>
             All Tasks
