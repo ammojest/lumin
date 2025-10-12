@@ -21,7 +21,7 @@ export const Form = () => {
   const STORAGE_KEY = "lumin-tasks";
 
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [isHydrated, setIsHydrated] = useState(false);
+  const [, setIsHydrated] = useState(false);
   const [name, setName] = useState<string>("");
   const [dependencies, setDependencies] = useState<string[]>([]);
 
@@ -32,13 +32,11 @@ export const Form = () => {
       if (savedTasks) {
         setTasks(JSON.parse(savedTasks));
       } else {
-        // Load initial tasks if no saved tasks exist
         setTasks(initialTasks as Task[]);
         setDependencies([]);
       }
     } catch (error) {
       console.error("Error loading tasks from localStorage:", error);
-      // Fallback to initial tasks on error
       setTasks(initialTasks as Task[]);
     }
 
@@ -54,13 +52,11 @@ export const Form = () => {
             )
           );
         } else {
-          // If localStorage is cleared (reset), load initial tasks
           setTasks(initialTasks as Task[]);
           setDependencies([]);
         }
       } catch (error) {
         console.error("Error syncing tasks from localStorage:", error);
-        // Fallback to initial tasks on error
         setTasks(initialTasks as Task[]);
       }
     };
