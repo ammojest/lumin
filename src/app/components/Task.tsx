@@ -105,7 +105,7 @@ export const Task = ({
           <Box display="flex" alignItems="center" gap={2}>
             {dependencies.length > 0 && (
               <Typography variant="body2" color="text.secondary">
-                Depends on: {dependencies.join(", ")}
+                depends on: {dependencies.join(", ")}
               </Typography>
             )}
 
