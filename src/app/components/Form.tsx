@@ -24,10 +24,40 @@ export const Form = () => {
             const savedTasks = localStorage.getItem(STORAGE_KEY);
             if (savedTasks) {
                 setTasks(JSON.parse(savedTasks));
+            } else {
+                // If no saved tasks, reset dependencies as well
+                setDependencies([]);
             }
         } catch (error) {
             console.error('Error loading tasks from localStorage:', error);
         }
+
+        // Listen for task list updates (including resets)
+        const handleTaskListUpdate = () => {
+            try {
+                const savedTasks = localStorage.getItem(STORAGE_KEY);
+                if (savedTasks) {
+                    const parsedTasks = JSON.parse(savedTasks);
+                    setTasks(parsedTasks);
+                    // Reset dependencies if any selected dependencies no longer exist
+                    setDependencies(prev => 
+                        prev.filter(dep => parsedTasks.some((task: Task) => task.name === dep))
+                    );
+                } else {
+                    // If localStorage is cleared (reset), clear everything
+                    setTasks([]);
+                    setDependencies([]);
+                }
+            } catch (error) {
+                console.error('Error syncing tasks from localStorage:', error);
+            }
+        };
+
+        window.addEventListener('taskListUpdated', handleTaskListUpdate);
+        
+        return () => {
+            window.removeEventListener('taskListUpdated', handleTaskListUpdate);
+        };
     }, []);
 
     // Save tasks to localStorage whenever tasks change (only after hydration)

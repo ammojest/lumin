@@ -91,6 +91,8 @@ export const TaskList = () => {
     setTasks(initialTasks as TaskType[]);
     try {
       localStorage.removeItem(STORAGE_KEY);
+      // Dispatch event to notify Form component to reset its dependencies
+      window.dispatchEvent(new Event("taskListUpdated"));
     } catch (error) {
       console.error("Error clearing localStorage:", error);
     }
