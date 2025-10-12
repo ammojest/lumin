@@ -1,7 +1,15 @@
 "use client";
 
-import { Button } from '@mui/material';
-import React from 'react'
+import {
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  Chip,
+  Box,
+  Divider,
+} from "@mui/material";
+import React from "react";
 
 type TaskStatus = "PENDING" | "IN_PROGRESS" | "COMPLETED";
 
@@ -19,7 +27,13 @@ type TasksProps = {
   onStatusUpdate: (taskName: string) => void;
 };
 
-export const Task = ({ name, status, dependencies, allTasks, onStatusUpdate }: TasksProps) => {
+export const Task = ({
+  name,
+  status,
+  dependencies,
+  allTasks,
+  onStatusUpdate,
+}: TasksProps) => {
   const handleStatusUpdate = () => {
     if (areAllDependenciesCompleted()) {
       onStatusUpdate(name);
@@ -27,8 +41,8 @@ export const Task = ({ name, status, dependencies, allTasks, onStatusUpdate }: T
   };
 
   const areAllDependenciesCompleted = () => {
-    return dependencies.every(depName => {
-      const depTask = allTasks.find(task => task.name === depName);
+    return dependencies.every((depName) => {
+      const depTask = allTasks.find((task) => task.name === depName);
       return depTask?.status === "COMPLETED";
     });
   };
@@ -39,20 +53,19 @@ export const Task = ({ name, status, dependencies, allTasks, onStatusUpdate }: T
       color: "primary" as const,
     },
     IN_PROGRESS: {
-      icon: "🔄", 
+      icon: "🔄",
       color: "warning" as const,
     },
     COMPLETED: {
       icon: "✅",
       color: "success" as const,
-    }
+    },
   } as const;
 
   const getButtonText = () => {
     if (!areAllDependenciesCompleted() && status === "PENDING") {
       return "🔒 Waiting for dependencies";
     }
-    const config = STATUS_CONFIG[status];
     switch (status) {
       case "PENDING":
         return `Start Task`;
@@ -65,37 +78,52 @@ export const Task = ({ name, status, dependencies, allTasks, onStatusUpdate }: T
     }
   };
 
-  const getStatusColor = () => {
-    switch (status) {
-      case "PENDING":
-        return "text-blue-600 bg-blue-100 border-blue-200";
-      case "IN_PROGRESS":
-        return "text-amber-600 bg-amber-100 border-amber-200";
-      case "COMPLETED":
-        return "text-green-600 bg-green-100 border-green-200";
-      default:
-        return "text-gray-600 bg-gray-100 border-gray-200";
-    }
-  };
-
   return (
-    <div className='flex gap-4 items-center my-2 w-full'>
-      <p className='text-lg font-medium w-35'>{name}</p>
-      <p>-</p>
-      <span className={`px-3 py-1 rounded-full text-sm font-semibold border ${getStatusColor()}`}>
-        {STATUS_CONFIG[status].icon} {status}
-      </span>
-      <div className='flex flex-end items-center'>
-        <p className='text-lg p-5'>(depends on: {dependencies.join(", ")})</p>
-      <Button 
-        variant="contained"
-        color={STATUS_CONFIG[status].color}
-        onClick={handleStatusUpdate}
-        disabled={status === "COMPLETED" || !areAllDependenciesCompleted()}
+    <Card sx={{ mb: 2, boxShadow: 2 }}>
+      <CardContent>
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          gap={2}
         >
-        {getButtonText()}
-      </Button>
-        </div>
-    </div>
-  )
-}
+          <Box display="flex" alignItems="center" gap={2}>
+            <Typography
+              variant="h6"
+              component="h3"
+              sx={{ fontWeight: 500, minWidth: 175 }}
+            >
+              {name}
+            </Typography>
+            <Chip
+              icon={<span>{STATUS_CONFIG[status].icon}</span>}
+              label={status}
+              color={STATUS_CONFIG[status].color}
+              variant="filled"
+            />
+          </Box>
+
+          <Box display="flex" alignItems="center" gap={2}>
+            {dependencies.length > 0 && (
+              <Typography variant="body2" color="text.secondary">
+                Depends on: {dependencies.join(", ")}
+              </Typography>
+            )}
+
+            <Button
+              variant="contained"
+              color={STATUS_CONFIG[status].color}
+              onClick={handleStatusUpdate}
+              disabled={
+                status === "COMPLETED" || !areAllDependenciesCompleted()
+              }
+              size="small"
+            >
+              {getButtonText()}
+            </Button>
+          </Box>
+        </Box>
+      </CardContent>
+    </Card>
+  );
+};
