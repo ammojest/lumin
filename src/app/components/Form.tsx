@@ -159,7 +159,7 @@ export const Form = () => {
                   .filter((task) => task.name !== name)
                   .map((task) => (
                     <MenuItem key={task.name} value={task.name}>
-                      {task.name} ({task.status})
+                      {task.name}
                     </MenuItem>
                   ))
               )}
