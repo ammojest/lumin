@@ -86,7 +86,6 @@ export const TaskList = () => {
     setTasks(initialTasks as TaskData[]);
     try {
       localStorage.removeItem(STORAGE_KEY);
-      // Dispatch event to notify Form component to reset its dependencies
       window.dispatchEvent(new Event("taskListUpdated"));
     } catch (error) {
       console.error("Error clearing localStorage:", error);
@@ -132,7 +131,12 @@ export const TaskList = () => {
         </Box>
 
         <Paper elevation={2} sx={{ p: 3 }}>
-          <Typography variant="h5" component="h2" gutterBottom sx={{ mb: 3 }}>
+          <Typography
+            variant="h5"
+            component="h2"
+            gutterBottom
+            sx={{ mb: 3, fontWeight: 600 }}
+          >
             All Tasks
           </Typography>
           <Stack spacing={2}>
@@ -151,7 +155,12 @@ export const TaskList = () => {
         </Paper>
 
         <Paper elevation={2} sx={{ p: 3 }}>
-          <Typography variant="h5" component="h2" gutterBottom sx={{ mb: 2 }}>
+          <Typography
+            variant="h5"
+            component="h2"
+            gutterBottom
+            sx={{ mb: 2, fontWeight: 600 }}
+          >
             Ready to Start
           </Typography>
           <List>
@@ -193,7 +202,12 @@ export const TaskList = () => {
         </Paper>
 
         <Paper elevation={2} sx={{ p: 3 }}>
-          <Typography variant="h5" component="h2" gutterBottom sx={{ mb: 3 }}>
+          <Typography
+            variant="h5"
+            component="h2"
+            gutterBottom
+            sx={{ mb: 3, fontWeight: 600 }}
+          >
             Add New Task
           </Typography>
           <Form />

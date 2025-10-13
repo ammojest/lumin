@@ -119,7 +119,6 @@ export const Form = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-xl font-bold mb-4">Add New Task</h3>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <TextField
             label="Task Name"
