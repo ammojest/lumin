@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Task } from "./Task";
-import { initialTasks } from "../data /mocks/mockTasks";
+import { initialTasks } from "../data/mocks/mockTasks";
 import { TaskData } from "../interfaces";
 
 import {

@@ -9,7 +9,7 @@ import {
   Box,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import { initialTasks } from "../data /mocks/mockTasks";
+import { initialTasks } from "../data/mocks/mockTasks";
 
 export const Form = () => {
   type Task = {
