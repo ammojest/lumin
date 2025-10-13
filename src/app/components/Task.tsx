@@ -9,22 +9,14 @@ import {
   Box,
 } from "@mui/material";
 import React from "react";
+import { TaskData, TaskStatus } from "../interfaces";
+import { STATUS_CONFIG } from "../constants/taskConstants";
+import { useTaskActions } from "../hooks/useTaskActions";
 
-type TaskStatus = "PENDING" | "IN_PROGRESS" | "COMPLETED";
-
-type TaskData = {
-  name: string;
-  status: string;
-  dependencies: string[];
-};
-
-type TasksProps = {
-  name: string;
-  status: TaskStatus;
-  dependencies: string[];
+interface TaskProps extends TaskData {
   allTasks: TaskData[];
   onStatusUpdate: (taskName: string) => void;
-};
+}
 
 export const Task = ({
   name,
@@ -32,48 +24,16 @@ export const Task = ({
   dependencies,
   allTasks,
   onStatusUpdate,
-}: TasksProps) => {
+}: TaskProps) => {
+  const { canProgress, buttonConfig } = useTaskActions(
+    status as TaskStatus,
+    dependencies,
+    allTasks
+  );
+
   const handleStatusUpdate = () => {
-    if (areAllDependenciesCompleted()) {
+    if (canProgress) {
       onStatusUpdate(name);
-    }
-  };
-
-  const areAllDependenciesCompleted = () => {
-    return dependencies.every((depName) => {
-      const depTask = allTasks.find((task) => task.name === depName);
-      return depTask?.status === "COMPLETED";
-    });
-  };
-
-  const STATUS_CONFIG = {
-    PENDING: {
-      icon: "⏳",
-      color: "primary" as const,
-    },
-    IN_PROGRESS: {
-      icon: "🔄",
-      color: "warning" as const,
-    },
-    COMPLETED: {
-      icon: "✅",
-      color: "success" as const,
-    },
-  } as const;
-
-  const getButtonText = () => {
-    if (!areAllDependenciesCompleted() && status === "PENDING") {
-      return "🔒 Waiting for dependencies";
-    }
-    switch (status) {
-      case "PENDING":
-        return `Start Task`;
-      case "IN_PROGRESS":
-        return `Complete Task`;
-      case "COMPLETED":
-        return `Completed`;
-      default:
-        return "Action";
     }
   };
 
@@ -95,9 +55,9 @@ export const Task = ({
               {name}
             </Typography>
             <Chip
-              icon={<span>{STATUS_CONFIG[status].icon}</span>}
+              icon={<span>{STATUS_CONFIG[status as TaskStatus].icon}</span>}
               label={status}
-              color={STATUS_CONFIG[status].color}
+              color={STATUS_CONFIG[status as TaskStatus].color}
               variant="filled"
             />
           </Box>
@@ -111,14 +71,12 @@ export const Task = ({
 
             <Button
               variant="contained"
-              color={STATUS_CONFIG[status].color}
+              color={STATUS_CONFIG[status as TaskStatus].color}
               onClick={handleStatusUpdate}
-              disabled={
-                status === "COMPLETED" || !areAllDependenciesCompleted()
-              }
+              disabled={buttonConfig.disabled}
               size="small"
             >
-              {getButtonText()}
+              {buttonConfig.text}
             </Button>
           </Box>
         </Box>

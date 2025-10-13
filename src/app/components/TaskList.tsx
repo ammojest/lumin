@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Task } from "./Task";
 import { initialTasks } from "../data /mocks/mockTasks";
+import { TaskData } from "../interfaces";
 
 import {
   Button,
@@ -17,16 +18,10 @@ import {
 } from "@mui/material";
 import { Form } from "./Form";
 
-export type TaskType = {
-  name: string;
-  status: "PENDING" | "IN_PROGRESS" | "COMPLETED";
-  dependencies: string[];
-};
-
 const STORAGE_KEY = "lumin-tasks";
 
 export const TaskList = () => {
-  const [tasks, setTasks] = useState<TaskType[]>([]);
+  const [tasks, setTasks] = useState<TaskData[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
@@ -36,11 +31,11 @@ export const TaskList = () => {
       if (savedTasks) {
         setTasks(JSON.parse(savedTasks));
       } else {
-        setTasks(initialTasks as TaskType[]);
+        setTasks(initialTasks as TaskData[]);
       }
     } catch (error) {
       console.error("Error loading tasks from localStorage:", error);
-      setTasks(initialTasks as TaskType[]);
+      setTasks(initialTasks as TaskData[]);
     }
 
     const handleStorageChange = () => {
@@ -61,7 +56,7 @@ export const TaskList = () => {
     };
   }, []);
 
-  const saveTasksToStorage = (updatedTasks: TaskType[]) => {
+  const saveTasksToStorage = (updatedTasks: TaskData[]) => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedTasks));
     } catch (error) {
@@ -70,8 +65,8 @@ export const TaskList = () => {
   };
 
   const handleStatusUpdate = (taskName: string) => {
-    setTasks((prevTasks: TaskType[]) => {
-      const updatedTasks = prevTasks.map((task: TaskType) => {
+    setTasks((prevTasks: TaskData[]) => {
+      const updatedTasks = prevTasks.map((task: TaskData) => {
         if (task.name === taskName) {
           if (task.status === "PENDING") {
             return { ...task, status: "IN_PROGRESS" as const };
@@ -82,13 +77,13 @@ export const TaskList = () => {
         return task;
       });
 
-      saveTasksToStorage(updatedTasks as TaskType[]);
-      return updatedTasks as TaskType[];
+      saveTasksToStorage(updatedTasks as TaskData[]);
+      return updatedTasks as TaskData[];
     });
   };
 
   const resetTasks = () => {
-    setTasks(initialTasks as TaskType[]);
+    setTasks(initialTasks as TaskData[]);
     try {
       localStorage.removeItem(STORAGE_KEY);
       // Dispatch event to notify Form component to reset its dependencies
@@ -141,12 +136,12 @@ export const TaskList = () => {
             All Tasks
           </Typography>
           <Stack spacing={2}>
-            {tasks.map((task: TaskType) => (
+            {tasks.map((task: TaskData) => (
               <Task
                 key={task.name}
                 {...task}
                 status={task.status as "PENDING" | "IN_PROGRESS" | "COMPLETED"}
-                allTasks={tasks as TaskType[]}
+                allTasks={tasks as TaskData[]}
                 onStatusUpdate={
                   handleStatusUpdate as (taskName: string) => void
                 }
@@ -161,16 +156,16 @@ export const TaskList = () => {
           </Typography>
           <List>
             {tasks
-              .filter((task: TaskType) => {
+              .filter((task: TaskData) => {
                 if (task.status !== "PENDING") return false;
                 return task.dependencies.every((depName: string) => {
-                  const depTask: TaskType | undefined = tasks.find(
-                    (t: TaskType) => t.name === depName
+                  const depTask: TaskData | undefined = tasks.find(
+                    (t: TaskData) => t.name === depName
                   );
                   return depTask?.status === "COMPLETED";
                 });
               })
-              .map((task: TaskType) => (
+              .map((task: TaskData) => (
                 <ListItem key={task.name} divider>
                   <ListItemText
                     primary={task.name}
@@ -178,11 +173,11 @@ export const TaskList = () => {
                   />
                 </ListItem>
               ))}
-            {tasks.filter((task: TaskType) => {
+            {tasks.filter((task: TaskData) => {
               if (task.status !== "PENDING") return false;
               return task.dependencies.every((depName: string) => {
-                const depTask: TaskType | undefined = tasks.find(
-                  (t: TaskType) => t.name === depName
+                const depTask: TaskData | undefined = tasks.find(
+                  (t: TaskData) => t.name === depName
                 );
                 return depTask?.status === "COMPLETED";
               });
